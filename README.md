@@ -92,41 +92,12 @@ Kunjungi `http://localhost:3000` untuk mulai menjelajah!
 
 ---
 
-## Aturan Bisnis Inti & Konfigurasi
-
-SEAPEDIA menerapkan aturan bisnis yang ketat baik di frontend maupun backend:
-
-1. **Aturan Checkout Satu Toko (Single-Store Checkout)**
-   - Karena SEAPEDIA adalah marketplace multi-penjual, satu keranjang (cart) hanya boleh berisi produk dari satu toko.
-   - **Perilaku**: Jika pembeli mencoba menambahkan produk dari toko lain sementara keranjangnya memiliki barang dari toko yang berbeda, sistem akan menolak tindakan tersebut dan meminta pembeli untuk mengosongkan keranjangnya terlebih dahulu. Hal ini diterapkan secara ketat di backend.
-
-2. **Aturan Kombinasi Diskon**
-   - Sistem checkout mendukung Voucher (dengan batas penggunaan) dan Promo.
-   - **Aturan**: Pembeli hanya dapat menerapkan **satu kode diskon** per checkout (Voucher ATAU Promo). Diskon tidak dapat digabungkan atau ditumpuk.
-
-3. **Aturan Perhitungan PPN 12%**
-   - Pajak (PPN) sebesar 12% diterapkan pada **Subtotal setelah diskon**.
-   - **Rumus**: `Pajak = (Subtotal - Diskon) * 12%`
-   - Jika jumlah diskon lebih besar dari subtotal, subtotal dianggap Rp 0 untuk keperluan pajak, sehingga dasar pengenaan pajak menjadi Rp 0. PPN terlihat jelas dalam ringkasan checkout.
-
-4. **Aturan Pendapatan Kurir (Driver Earning)**
-   - Seluruh biaya pengiriman yang dibayarkan oleh pembeli (misal Rp 10.000 untuk Regular, Rp 20.000 untuk Instant) menjadi **100% pendapatan Kurir**.
-   - Kurir dapat melihat akumulasi pendapatan dari pekerjaan yang telah diselesaikan di Dashboard Kurir mereka.
-
-5. **SLA Keterlambatan (Overdue SLA) & Simulasi Waktu**
-   - **SLA Pengiriman**: Instant (1 Hari), Next Day (2 Hari), Regular (5 Hari).
-   - Jika pesanan melewati SLA ini berdasarkan metode pengiriman yang dipilih, pesanan tersebut memenuhi syarat untuk pengembalian dana otomatis (auto-refund) / retur otomatis (status menjadi `DIKEMBALIKAN`).
-   - Pengembalian dana secara otomatis mengembalikan jumlah yang dibayarkan ke dompet Pembeli, membatalkan pendapatan Penjual, dan mengembalikan stok produk.
-   - **Simulasi Waktu**: Admin dapat mensimulasikan hari esok dengan menavigasi ke Dashboard Admin (`/dashboard/admin`) dan menggunakan alat **Simulasi Hari Esok (Simulate Next Day)**. Ini memicu mesin verifikasi SLA secara manual tanpa harus menunggu waktu nyata.
-
----
-
 ## Langkah-Langkah Keamanan (Catatan Keamanan)
 
 SEAPEDIA menerapkan pengerasan keamanan yang kuat untuk semua alur sensitif:
 
-- **Pencegahan SQL Injection**: Kami menggunakan Prisma ORM, yang secara inheren melakukan escaping nilai dan menggunakan parameterized queries, secara ketat mencegah SQL injection di seluruh akses database.
-- **Pencegahan XSS**: React/Next.js secara otomatis melakukan escaping konten buatan pengguna di JSX sebelum dirender. Kami tidak menggunakan `dangerouslySetInnerHTML`. Ulasan aplikasi publik dan deskripsi produk dirender dengan aman sebagai teks standar untuk mencegah eksekusi skrip atau rusaknya tata letak (layout).
+- **Pencegahan SQL Injection**: Project ini menggunakan Prisma ORM, yang secara inheren melakukan escaping nilai dan menggunakan parameterized queries, secara ketat mencegah SQL injection di seluruh akses database.
+- **Pencegahan XSS**: React/Next.js secara otomatis melakukan escaping konten buatan pengguna di JSX sebelum dirender. Project ini tidak menggunakan `dangerouslySetInnerHTML`. Ulasan aplikasi publik dan deskripsi produk dirender dengan aman sebagai teks standar untuk mencegah eksekusi skrip atau rusaknya tata letak (layout).
 - **Validasi Input**: Semua form (pendaftaran, pembuatan produk, ulasan, checkout) secara ketat memvalidasi field yang wajib diisi, mencegah kuantitas negatif, harga negatif, dan tipe data yang tidak valid menggunakan validasi backend yang kuat sebelum menyimpan atau memproses data.
 - **Perilaku Sesi (Session Behavior)**: Autentikasi ditangani melalui cookie JWT HttpOnly yang aman. Logout segera membatalkan/membersihkan cookie sesi aktif. Token diverifikasi pada setiap permintaan (request) yang aman.
 - **Kontrol Akses Berbasis Peran (RBAC)**: Peran (role) aktif diverifikasi secara ketat di sisi server. Mengubah rute frontend saja tidak cukup; endpoint privat mengotorisasi tindakan hanya berdasarkan peran aktif saat ini. Selain itu, pengguna tidak dapat mengakses atau mengubah sumber daya (resource) milik pengguna lain (misalnya, Penjual hanya dapat mengedit produknya sendiri, dan Kurir hanya dapat mengambil pekerjaan yang belum diambil orang lain).
@@ -146,7 +117,7 @@ Backend menggunakan Route Handlers Next.js yang terletak di `src/app/api/`. Beri
 
 ---
 
-## 📖Panduan Pengujian End-to-End
+## Panduan Pengujian End-to-End
 
 Untuk merasakan alur lengkap SEAPEDIA:
 
