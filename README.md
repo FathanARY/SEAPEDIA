@@ -1,12 +1,53 @@
-# SEAPEDIA E-Commerce Platform
+<div align="center">
+
+<h1> SEAPEDIA E-Commerce Platform </h1>
+<br/>
 
 SEAPEDIA adalah platform e-commerce multi-peran (multi-role) yang komprehensif, dibangun dengan Next.js dan Prisma. Platform ini menghubungkan Penjual (Seller), Pembeli (Buyer), dan Kurir (Driver) dalam satu pengalaman marketplace, yang dipantau oleh Admin.
+<br/>
 
-## 🚀 Persiapan Cepat & Demo
+  <img src="https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" alt="Prisma" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
+</div>
 
-### 1. Prasyarat
+
+## Live Demo
+**Coba aplikasinya langsung di sini! [https://seapedia-rust.vercel.app/](https://seapedia-rust.vercel.app/)**
+
+---
+
+## Tech Stack
+
+Daftar teknologi, library, dan tools yang digunakan dalam proyek ini.
+
+| Kategori | Teknologi |
+| :--- | :--- |
+| **Framework Utama** | [Next.js](https://nextjs.org/), [React](https://react.dev/) |
+| **Bahasa** | [TypeScript](https://www.typescriptlang.org/) |
+| **Backend & Akses Data** | [Prisma](https://www.prisma.io/), Next.js Route Handlers / Server Actions |
+| **Database** | [PostgreSQL](https://www.postgresql.org/) (via [Supabase](https://supabase.com/)) |
+| **Autentikasi** | Custom JWT ([jose](https://github.com/panva/jose)), [bcryptjs](https://github.com/dcodeIO/bcrypt.js) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) |
+| **Deployment** | [Vercel](https://vercel.com/) |
+
+---
+
+## Persiapan Cepat (Lokal)
+
+### 0. Prasyarat
 - Node.js (v18+)
-- SQLite (database bawaan yang digunakan oleh Prisma dalam pengaturan ini)
+- npm (biasanya bawaan instalasi Node.js)
+
+### 1. Clone Repository
+Clone repositori ini ke komputer lokal Anda:
+```bash
+git clone https://github.com/FathanARY/SEAPEDIA.git
+cd SEAPEDIA
+```
 
 ### 2. Instalasi
 ```bash
@@ -31,14 +72,17 @@ npm run db:seed
 ```
 
 Ini akan menghasilkan akun-akun berikut (semua kata sandi adalah `password123`):
-- **Superuser (Admin, Seller, Buyer, Driver)**: `super@seapedia.com` (Dilengkapi dengan toko 'Super Store ID' dan saldo dompet Rp 5.000.000)
-- **Buyer (Pembeli Reguler)**: `buyer@seapedia.com` (Dilengkapi dengan saldo dompet Rp 2.000.000)
-- **Driver (Kurir)**: `driver@seapedia.com` (Dilengkapi dengan saldo dompet Rp 100.000)
+
+| No | Username | Peran | Keterangan |
+| :-: | :--- | :--- | :--- |
+| 1 | `superuser` | Admin, Seller, Buyer, Driver | Dilengkapi dengan toko 'Super Store ID' dan saldo dompet Rp 5.000.000 |
+| 2 | `pembeli_biasa` | Buyer (Pembeli Reguler) | Dilengkapi dengan saldo dompet Rp 2.000.000 |
+| 3 | `kurir_kilat` | Driver (Kurir) | Dilengkapi dengan saldo dompet Rp 100.000 |
 
 **Catatan Tambahan Data Demo**:
 - Kode Promo yang tersedia: `COMPFEST` (Diskon Rp 50.000).
 
-**Catatan Pembuatan Admin**: Jika Anda perlu membuat akun admin secara manual di luar data seed, Anda harus mendaftar akun pengguna normal melalui UI terlebih dahulu, kemudian memperbarui peran (role) mereka secara langsung di database SQLite menjadi `ADMIN` (karena tidak ada halaman pendaftaran admin publik untuk alasan keamanan).
+**Catatan Pembuatan Admin**: Jika Anda perlu membuat akun admin secara manual di luar data seed, Anda harus mendaftar akun pengguna normal melalui UI terlebih dahulu, kemudian memperbarui peran (role) mereka secara langsung di database menjadi `ADMIN` (karena tidak ada halaman pendaftaran admin publik untuk alasan keamanan).
 
 ### 5. Menjalankan Aplikasi
 ```bash
@@ -48,7 +92,7 @@ Kunjungi `http://localhost:3000` untuk mulai menjelajah!
 
 ---
 
-## 💼 Aturan Bisnis Inti & Konfigurasi
+## Aturan Bisnis Inti & Konfigurasi
 
 SEAPEDIA menerapkan aturan bisnis yang ketat baik di frontend maupun backend:
 
@@ -77,7 +121,7 @@ SEAPEDIA menerapkan aturan bisnis yang ketat baik di frontend maupun backend:
 
 ---
 
-## 🛡️ Langkah-Langkah Keamanan (Catatan Keamanan)
+## Langkah-Langkah Keamanan (Catatan Keamanan)
 
 SEAPEDIA menerapkan pengerasan keamanan yang kuat untuk semua alur sensitif:
 
@@ -89,7 +133,7 @@ SEAPEDIA menerapkan pengerasan keamanan yang kuat untuk semua alur sensitif:
 
 ---
 
-## 📡 Gambaran Umum Dokumentasi API
+## Gambaran Umum Dokumentasi API
 
 Backend menggunakan Route Handlers Next.js yang terletak di `src/app/api/`. Berikut adalah ringkasan yang jelas tentang namespace API inti dan tujuannya:
 
@@ -102,28 +146,28 @@ Backend menggunakan Route Handlers Next.js yang terletak di `src/app/api/`. Beri
 
 ---
 
-## 📖 Panduan Pengujian End-to-End
+## 📖Panduan Pengujian End-to-End
 
 Untuk merasakan alur lengkap SEAPEDIA:
 
 1. **Penjelajahan Tamu & Ulasan**
    - Kunjungi halaman utama tanpa login. Jelajahi katalog produk dan lihat detail produk.
    - Kirim Ulasan Aplikasi dari form di halaman utama.
-2. **Login sebagai Superuser/Admin** (`super@seapedia.com`)
+2. **Login sebagai Superuser/Admin** (`superuser`)
    - Pilih peran **Admin**.
    - Buka Dashboard Admin. Pantau metrik platform.
    - Buka bagian Diskon dan buat kode Promo atau Voucher.
-3. **Login sebagai Buyer** (`buyer@seapedia.com`)
+3. **Login sebagai Buyer** (`pembeli_biasa`)
    - Top-up dompet Anda (top-up dummy).
    - Tambahkan produk ke keranjang.
    - Buka Keranjang -> Checkout.
    - Terapkan kode diskon yang Anda buat atau `COMPFEST`. Pilih Metode Pengiriman.
    - Selesaikan Checkout.
-4. **Login sebagai Superuser (Peran Seller)** (`super@seapedia.com`)
+4. **Login sebagai Superuser (Peran Seller)** (`superuser`)
    - Pilih peran **Seller**.
    - Buka `/dashboard/seller/orders` (Pesanan Masuk).
    - Temukan pesanan baru (Sedang Dikemas) dan klik **Proses Pesanan**. Status akan berubah menjadi `MENUNGGU_PENGIRIM`.
-5. **Login sebagai Driver** (`driver@seapedia.com`)
+5. **Login sebagai Driver** (`kurir_kilat`)
    - Buka `/dashboard/driver/jobs` (Bursa Kerja).
    - Ambil pekerjaan pengiriman yang tersedia.
    - Buka pekerjaan aktif dan klik **Selesaikan Pengiriman** untuk menyelesaikannya.
