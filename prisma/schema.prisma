@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roles     Role[]
+  store     Store?
+  wallet    Wallet?
+  addresses Address[]
+  cartItems CartItem[]
+  orders     Order[]  @relation("BuyerOrders")
+  driverJobs DeliveryJob[] @relation("DriverJobs")
+}
+
+model Role {
+  id     String   @id @default(cuid())
+  role   String   // ADMIN, SELLER, BUYER, DRIVER
+  userId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+}
+
+model Store {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products    Product[]
+  orders      Order[]   @relation("StoreOrders")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  price       Int
+  stock       Int      @default(0)
+  category    String
+  imageUrl    String?
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  name      String
+  rating    Int      // 1-5
+  comment   String
+  createdAt DateTime @default(now())
+}
+
+model Wallet {
+  id           String              @id @default(cuid())
+  userId       String              @unique
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance      Int                 @default(0)
+  transactions WalletTransaction[]
+}
+
+model WalletTransaction {
+  id        String   @id @default(cuid())
+  walletId  String
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  amount    Int
+  type      String   // "TOPUP", "PAYMENT", "REFUND", "INCOME"
+  createdAt DateTime @default(now())
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label       String
+  fullAddress String
+  isDefault   Boolean  @default(false)
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id             String   @id @default(cuid())
+  buyerId        String
+  buyer          User     @relation("BuyerOrders", fields: [buyerId], references: [id])
+  storeId        String
+  store          Store    @relation("StoreOrders", fields: [storeId], references: [id])
+  subtotal       Int
+  deliveryFee    Int
+  taxAmount      Int
+  discountAmount Int      @default(0)
+  discountCode   String?
+  totalAmount    Int
+  deliveryMethod String   // "INSTANT", "NEXT_DAY", "REGULAR"
+  status         String   // "SEDANG_DIKEMAS", "MENUNGGU_PENGIRIM", "SEDANG_DIKIRIM", "PESANAN_SELESAI", "DIKEMBALIKAN"
+  
+  items          OrderItem[]
+  statusHistory  OrderStatusHistory[]
+  deliveryJob    DeliveryJob?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Int      // price per item at checkout
+}
+
+model OrderStatusHistory {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status    String
+  createdAt DateTime @default(now())
+}
+
+model Voucher {
+  id             String   @id @default(cuid())
+  code           String   @unique
+  discountAmount Int
+  expiryDate     DateTime
+  remainingUsage Int
+  createdAt      DateTime @default(now())
+}
+
+model Promo {
+  id             String   @id @default(cuid())
+  code           String   @unique
+  discountAmount Int
+  expiryDate     DateTime
+  createdAt      DateTime @default(now())
+}
+
+model DeliveryJob {
+  id        String   @id @default(cuid())
+  orderId   String   @unique
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  driverId  String?
+  driver    User?    @relation("DriverJobs", fields: [driverId], references: [id])
+  status    String   // "PENDING", "TAKEN", "COMPLETED"
+  earning   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
